@@ -17,10 +17,6 @@ def __load_environment_variables():
 def main():
     # Specify the folder containing images
     image_folder = 'images/'
-    
-    # Initialize the image parser and load images
-    parser = ImageParser(image_folder)
-    images = parser.load_images()  # Now a list of (filename, image) tuples
 
     # Read the token from the environment variable
     __load_environment_variables()
@@ -31,7 +27,15 @@ def main():
     # Read the model from the command line argument
     parser = argparse.ArgumentParser("main.py")
     parser.add_argument("--model", help="Model to use", type=str, default="gemma")
+    parser.add_argument("--image_folder", help="Folder containing images", type=str, default=image_folder)
     args = parser.parse_args()
+
+    if args.image_folder:
+        image_folder = args.image_folder
+
+    # Initialize the image parser and load images
+    parser = ImageParser(image_folder)
+    images = parser.load_images()  # Now a list of (filename, image) tuples
 
     # Initialize the Llama 4 Scout model analyzer
     analyzer = ImageAnalyzer(model_path=args.model, token=token)
